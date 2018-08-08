@@ -53,6 +53,7 @@
                     </ul>
                 </section>
 
+                <!-- Testing a pure function -->
                 <section>
                     <section>
                         <h3>Testing Pure Code</h3>
@@ -82,16 +83,44 @@ makeUsPhoneNumber num
                         <pre><code class="hljs">
     | isJust $ T.find isLetter num = Nothing
                         </code></pre>
-                        <p>Obviously can' have letters, so "12345ab6789" should fail</p>
+                        <p>Obviously can' have letters, so "123456a890" should fail</p>
                     </section>
                     <section>
                         <h3>Testing Pure Code</h3>
                         <p>Using Tasty and HUnit</p>
                         <pre><code class="hljs">
+    testCase "Rejects inputs with letters" $ let
+        l1 = "123456a890"
+        l2 = "ABC123defa"
+        l3 = "this is a full sentence"
+        res = makeUsPhoneNumber <$> [l1, l2, l3]
+        in all isNothing res @?= True
+                        </code class="hljs"></pre>
                     </section>
 
                 </section>
 
+                <section>
+                    <section>
+                        <h3>Properties & Assertions</h3>
+                        <p>Assertions test specific propeties of specific input values. Quick to write and easy to visually verrify. Only as exhaustive as the developer writing the test.
+                        </p>
+                        <p>Properties test general conditions for arbitrary input values. Think of it as a set of pre/post-conditions on your function.  These take a long time to write and are easy to get wrong by re-implementing the body of your function in the pre/post-conditions. Quite exhaustive.
+                        </p>
+                    </section>
+                    <section>
+                        <h3>Properties & Assertions</h3>
+                        <p>QuickCheck via Tasty</p>
+                        <pre><code class="hljs">
+testProperty "nextPageInList" $ do
+    property "gets the empty paged list given an empty list" $
+        \maybePageIdentifier ->
+            nextPageInList (fmap getPositive maybePageIdentifier) emptyPages
+                == emptyPagedList
+                        <code></pre>
+                        <p>Relies on the <em style="color: green;">Testable</em> class from Test.QuickCheck</p>
+                    </section>
+                </section>
             </div>
         </div>
     </body>
