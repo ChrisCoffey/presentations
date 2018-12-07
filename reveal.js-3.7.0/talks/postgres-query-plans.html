@@ -1,0 +1,212 @@
+<!doctype html>
+<html lan="en">
+
+    <head>
+		<meta charset="utf-8">
+
+		<title>Postgres Query Plans</title>
+
+		<meta name="description" content="An overview of what Postgres query plans are, how they're created, and how to optimize them.">
+		<meta name="author" content="Chris Coffey">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="../css/reveal.css">
+		<link rel="stylesheet" href="../css/theme/night.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <!-- Title slides -->
+                <section>
+                    <h2>Intro to Postgres Query Plans</h2>
+                </section>
+
+                <section>
+                    <h2>Agenda</h3>
+                    <ul>
+                        <li>What is a query plan?</li>
+                        <li>How do you read an execution plan?</li>
+                    </ul>
+                </section>
+
+                <!-- What is a query plan? -->
+                <section>
+                    <section>
+                        <h3>What is a query plan?</h3>
+                        <p >SQL is a declarative language. This means:</p>
+                        <ul>
+                            <li class='fragment'>The textual SQL langague we write is transformed into a different language for evaluation</li>
+                            <li class='fragment'>A given SQL statement has <i>many</i> equivalent executable ASTs</i>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>What is a query plan?</h3>
+                        <p>
+                            An executable query plan consists of <b>Node</b>s, which represent a specific type of processing to do. Processing may consist of:
+                        </p>
+                        <ul>
+                            <li class='fragment'>Relation scans (sequential, index, bitmap)</li>
+                            <li class='fragment'>Joins (loop, merge, hash)</li>
+                            <li class='fragment'>Sort</li>
+                            <li class='fragment'>Aggregation</li>
+                            <li class='fragment'>Unions</li>
+                        </ul>
+                    </section>
+                   <section>
+                        <h3>Anatomy of a Node</h3>
+                        <p>Nodes consist of an input, output, and qualifiers. They contain everything the executor needs to evaluate them.</p>
+                        <ul>
+                            <li >Input may be either a relation to scan or another node(s) (depending on node type)</li>
+                            <li >Ouptut is the result to return. Think of a <b>select</b> list</li>
+                            <li >Qualifiers are the <b>where</b> clauses</li>
+                        </ul>
+                    </section>
+                   <section>
+                        <h3>Node Metadata</h3>
+                        <p>
+                            In addition to execution information, nodes also contain cost estimates for the following:
+                        </p>
+                        <ul class="fragment">
+                            <li ><b>Row width</b>. An average used to estimate memory used</li>
+                            <li ><b>Total cost</b>. This is what the optimizer minimizes</li>
+                            <li ><b>Constant cost</b> (paid at startup due to pre-processing). Important for <b>limit</b> nodes</li>
+                            <li ><b>Output rowcount</b>. Used to estimate cost for aggregate operations</li>
+                        </ul>
+                    </section>
+                   <section>
+                        <h3>Choosing the execution plan</h3>
+                        <p>
+                            Initially, nodes are not fully populated with the information required to execute them. At this stage they're called <b>Path</b> nodes.
+                        </p>
+                        <p class="fragment">
+                            The optimizer generates all possible Paths, then conducts either an exhaustive or semi-random search (using a genetic algorithm) through the plans for the lowest cost.
+                        </p>
+                        <p class="fragment">
+                            The lowest-cost result is translated into a <b>Plan</b> node.
+                        </p>
+
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3>Reading an Execution Plan</h3>
+                        <p>Trellis, everyone's favorite.</p>
+                        <img class="fragment" src="http://2.bp.blogspot.com/-6vMm9IJbM2w/TQBCJnSBJbI/AAAAAAAAAwI/H8RDYY4QxeY/s1600/baby+goat.jpg" height="60%" width="60%">
+                    </section>
+                    <section>
+                    <h3>Reading an Execution Plan</h3>
+                    <p></p>
+                    <pre><code class="hljs">
+select *
+from events
+	join participants
+		on events.id = participants.event_id
+		and participants.cvid like 'auth0%'
+where type in ('Paired', 'Unpaired')
+order by events.service_created_at asc
+limit 500;
+                    </code></pre>
+                    <pre class="fragment"><code >Explain Analyze</code></pre>
+                    </section>
+                    <section>
+                        <h3>Reading an Execution Plan</h3>
+                    <pre style="margin-left: -15%">
+Limit  (cost=32050.37..32051.62 rows=500 width=544)
+       (actual time=234.955..235.330 rows=500 loops=1)
+  ->  Sort  (cost=32050.37..32060.06 rows=3876 width=544)
+            (actual time=234.953..235.115 rows=500 loops=1)
+        Sort Key: events.service_created_at
+        Sort Method: top-N heapsort  Memory: 532kB
+        ->  Hash Join  (cost=12751.95..31857.23 rows=3876 width=544)
+                       (actual time=11.284..231.595 rows=4488 loops=1)
+              Hash Cond: (participants.event_id = events.id)
+              ->  Seq Scan on participants  (cost=0.00..18058.12 rows=268904 width=43)
+                                            (actual time=0.033..143.878 rows=274711 loops=1)
+                    Filter: (cvid ~~ 'auth0%'::text)
+                    Rows Removed by Filter: 560825
+              ->  Hash  (cost=12673.38..12673.38 rows=6286 width=493)
+                        (actual time=11.087..11.087 rows=6808 loops=1)
+                    Buckets: 8192  Batches: 1  Memory Usage: 3646kB
+                    ->  Index Scan using event_type on events
+                        (cost=0.42..12673.38 rows=6286 width=493)
+                        (actual time=0.025..5.912 rows=6808 loops=1)
+                          Index Cond: (type = ANY ('{Paired,Unpaired}'::text[]))
+Planning time: 0.294 ms
+Execution time: 235.525 ms
+                    </pre>
+                    </section>
+                    <section>
+                        <h3>Reading an Execution Plan</h3>
+                        <pre style="margin-left: -15%">
+                        ...
+              ->  Hash  (cost=12673.38..12673.38 rows=6286 width=493)
+                        (actual time=11.087..11.087 rows=6808 loops=1)
+                    Buckets: 8192  Batches: 1  Memory Usage: 3646kB
+                    ->  Index Scan using event_type on events
+                        (cost=0.42..12673.38 rows=6286 width=493)
+                        (actual time=0.025..5.912 rows=6808 loops=1)
+                          Index Cond: (type = ANY ('{Paired,Unpaired}'::text[]))
+                        ...
+                        </pre>
+                        <p class="fragment">
+                        cost=<b>cost to first element</b>..<b>cost for all elements</b>
+                        </p>
+                        <p class="fragment">
+                        can be tuned using postgres confiuration parameters. I.e. Is it a magnetic disk or ssd (not a real param)?
+                        </p>
+                    </section>
+                </section>
+            </div>
+        </div>
+    </body>
+
+    <script src="../lib/js/head.min.js"></script>
+    <script src="../js/reveal.js"></script>
+
+    <script>
+
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+
+            transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [
+                { src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                { src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: '../plugin/search/search.js', async: true },
+                { src: '../plugin/zoom-js/zoom.js', async: true },
+                { src: '../plugin/notes/notes.js', async: true }
+            ]
+        });
+
+    </script>
+
+<
