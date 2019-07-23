@@ -1,0 +1,224 @@
+<!doctype html>
+<html lan="en">
+
+    <head>
+		<meta charset="utf-8">
+
+		<title>Making the Three Ways Concrete</title>
+
+		<meta name="description" content="Think of this as applied lean thinking">
+		<meta name="author" content="Chris Coffey">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="../css/reveal.css">
+        <link rel="stylesheet" href="../css/theme/serif.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <!-- Title slides -->
+                <section>
+                    <h2>The Three Ways: Redux</h2>
+                    <p class="fragment"></p>
+                </section>
+
+                <section>
+                    <h2>Agenda</h3>
+                    <ul>
+                        <li>Talk Goals</li>
+                        <li>Optimizing</li>
+                        <li>Learning</li>
+                        <li>Sustaining</li>
+                        <li>Homework</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Our Goals</h3>
+                    <ol>
+                        <li class="fragment">What to do when things feel slow?</li>
+                        <li class="fragment">How to identify if things are slow?</li>
+                        <li class="fragment">How to pay it foward to the entire company?</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h3>Pop Quiz!</h3>
+                    <div class="fragment">
+                        <p>How much stuff does this system produce?</p>
+                        <img  height="50%" width="80%" src="../../images/throughput.png"/>
+                    </div>
+                </section>
+                <!-- Optimizing, aka the first way -->
+                <section>
+                    <section>
+                        <h3>Optimizing</h3>
+                        <div class="fragment">
+                            <p>I think we can do better. But how?</p>
+                            <ul class="fragment">
+                                <li>Where to start?</li>
+                                <li>Why?</li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Optimizing</h3>
+                        <h5>Step 1:</h5>
+                        <div class="fragment">
+                            <p>Articulate the problem. Seriously, just write it down & read it back to yourself.</p>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Optimizing</h3>
+                        <h5>Step 2:</h5>
+                        <div class="fragment">
+                            <p>Is it the bottleneck?</p>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Optimizing</h3>
+                        <h5>Step 3:</h5>
+                        <div class="fragment">
+                            <p>Yes: Break it down into its constituent parts & repeat Step 1. If you can't, continue.</p>
+                            <p>No: Stop.</p>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Optimizing</h3>
+                        <h5>Step 4:</h5>
+                        <div class="fragment">
+                            <p>Improve the bottleneck's throughput. AKA fix it.</p>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Optimizing</h3>
+                        <ol>
+                            <li>Articulate the problem</li>
+                            <li>Identify the bottleneck</li>
+                            <li>Find the <strong>real</strong> bottleneck</li>
+                            <li>Fix it and collect the tacos</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <h3>Optimizing</h3>
+                        <h5>A Case Study</h5>
+                        <p class="fragment">Building UI at CollegeVine</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3>Learning</h3>
+                        <br>
+                        <p class="fragment">What is learning?</p>
+                        <p class="fragment"><strong>Changing behaviors based on feedback.</strong></p>
+                    </section>
+                    <section>
+                        <h3>Learning</h3>
+                        <p class="fragment">What is feedback?</p>
+                        <p class="fragment">When I do <em>X</em>, <em>Y</em> happens</p>
+                        <p class="fragment">Can you learn without feedback?</p>
+                    </section>
+                    <section>
+                        <h3>Learning</h3>
+                        <p class="fragment">What is a feedback cycle?</p>
+                        <div class="fragment">
+                            <p>Which cycle leads to learning most quickly?</p>
+                            <ul>
+                                <li>I touch a hot stove and burn my hand.</li>
+                                <li>I play video games instead of studying, then fail a test two weeks later.</li>
+                            </ul>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Learning</h3>
+                        <h5>A Case Study</h5>
+                        <p class="fragment">NPS at CollegeVine</p>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3>Sustaining</h3>
+                        <div class="fragment">
+                            <p>Macro Loops!!</p>
+                            <img  height="50%" width="80%" src="../../images/thir_way_loops.png"/>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Sustaining</h3>
+                        <ul>
+                            <li class="fragment">Feed learning back into the organization</li>
+                            <li class="fragment">Try new things. Lots of them. All the time!</li>
+                            <li class="fragment">Postmortems for when the new things don't work</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Sustaining</h3>
+                        <h5>A Case Study</h5>
+                        <p class="fragment">Examples?</p>
+                    </section>
+                </section>
+                <section>
+                    <h3>Our Goals: Redux</h3>
+                    <ol>
+                        <li class="fragment">What to do when things feel slow? The First Way!</li>
+                        <li class="fragment">How to identify if things are slow? The Second Way!</li>
+                        <li class="fragment">How to pay it foward to the entire company? The Third Way!</li>
+                    </ol>
+                </section>
+                <section>
+                    <h3>Fancy Handout</h3>
+                </section>
+            </div>
+        </div>
+    </body>
+
+    <script src="../lib/js/head.min.js"></script>
+    <script src="../js/reveal.js"></script>
+
+    <script>
+
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+
+            transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [
+                { src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                { src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: '../plugin/search/search.js', async: true },
+                { src: '../plugin/zoom-js/zoom.js', async: true },
+                { src: '../plugin/notes/notes.js', async: true }
+            ]
+        });
+
+    </script>
+
+<
