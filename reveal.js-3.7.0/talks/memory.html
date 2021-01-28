@@ -1,0 +1,166 @@
+<!doctype html>
+<html lan="en">
+
+    <head>
+		<meta charset="utf-8">
+
+		<title>Registers to rotating magnets: a primer on computer memory in 2021</title>
+
+		<meta name="description" content="A survey of how computer memory works">
+		<meta name="author" content="Chris Coffey">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="../css/reveal.css">
+		<link rel="stylesheet" href="../css/theme/serif.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="../lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? '../css/print/pdf.css' : '../css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+    <body>
+        <div class="reveal">
+            <div class="slides">
+                <!-- Title slides -->
+                <section>
+                    <h2>Modern Computer Memory</h2>
+                    <h5>a very deep rabbit hole indeed!</h5>
+                </section>
+
+                <section>
+                    <h2>What you'll learn</h3>
+                    <ol>
+                        <li class="fragment">What is an iconoscope?</li>
+                        <li class="fragment">What did 1MB of RAM cost in 1980?</li>
+                        <li class="fragment">How modern computer memory works</li>
+                    </ol>
+                </section>
+
+                <!-- Setting the stage -->
+                <section>
+                    <section>
+                        <h3>In the early days</h3>
+                    </section>
+
+                    <section>
+                        <p>ENIAC</p>
+                        <img style="height: 350px;" src="../../images/eniac1.jpg"/>
+                        <p>20 words and punchcards</p>
+                        <p>Programmed by rewiring plugs</p>
+                    </section>
+
+                    <section>
+                        <p>EDVAC</p>
+                        <img style="height: 350px;" src="../../images/edvac.jpg"/>
+                        <p>First stored-program computer</p>
+                        <p>1,000 44-bit words</p>
+                    </section>
+
+                    <section>
+                        <p class="fragment">A memory "crisis"</p>
+                        <div class="fragment fade-up">
+                            <img src="../../images/iconoscope.jpg"/>
+                            <p>500x500 grid of pixels gives 250Kb of memory</p>
+                        </div>
+                    </section>
+
+                    <section>
+                        <p>Modern shared memory layout</p>
+                        <img style="height: 550px;" src="../../images/shared_memory.png"/>
+                    </section>
+                </section>
+
+                <!-- Digression into virtual memory -->
+                <section>
+                    <section>
+                        <h3>What happens before <em>foo = "bar"</em>?</h3>
+                    </section>
+
+                    <section>
+                        <h3>What happens before <em>foo = "bar"</em>?</h3>
+                        <ol>
+                            <li class="fragment">Create an address space for the process</li>
+                            <li class="fragment">Load the code from disk</li>
+                            <li class="fragment">Allocate some memory in the program heap for the value</li>
+                        </ol>
+                    </section>
+
+                    <section>
+                        <h3>Exploring the address space</h3>
+                        <ol>
+                            <li class="fragment">How many bytes can reside in a 64-bit address space?</li>
+                            <li class="fragment">How does the OS know where to get the first byte of the program's code?</li>
+                            <li class="fragment">Why doesn't the computer crash if a program uses more than the machine's available physical memory?</li>
+                        </ol>
+                    </section>
+                    <section>
+                        <h3>Virtual Memory</h3>
+                        <ul>
+                            <li class="fragment">OS abstraction hiding details of physical memory</li>
+                            <li class="fragment">Standardizes addresses</li>
+                            <li class="fragment">Provides process memory isolation (ideally)</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <!-- Memory hierarchy -->
+                <section>
+                    <h3>Bits all the way down</h3>
+                </section>
+
+                <section>
+                    <p>What do the following lists of numbers have in common?</p>
+                    <ul>
+                        <li>0.25, 2, 100, 3000</li>
+                        <li>.75, 256, 163000000, 524000000</li>
+                    </ul>
+                </section>
+            </div>
+        </div>
+    </body>
+
+    <script src="../lib/js/head.min.js"></script>
+    <script src="../js/reveal.js"></script>
+
+    <script>
+
+        // More info https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+
+            transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+            // More info https://github.com/hakimel/reveal.js#dependencies
+            dependencies: [
+                { src: '../lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                { src: '../plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: '../plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: '../plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: '../plugin/search/search.js', async: true },
+                { src: '../plugin/zoom-js/zoom.js', async: true },
+                { src: '../plugin/notes/notes.js', async: true }
+            ]
+        });
+
+    </script>
+
+</html>
